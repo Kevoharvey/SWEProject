@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}Reviews - FarmFresh{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div class="container"><h1><i class="fas fa-star"></i> Customer Reviews</h1></div>
+</div>
+<div class="container" style="max-width:800px;">
+    {% if reviews %}
+    {% for r in reviews %}
+    <div class="review-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <strong>{{ r.buyer_name }}</strong>
+            <span style="font-size:0.85rem;color:var(--text-light);">{{ r.created_at.strftime('%b %d, %Y') }}</span>
+        </div>
+        <div class="review-stars">{% for i in range(5) %}{% if i < r.rating %}★{% else %}☆{% endif %}{% endfor %}</div>
+        {% if r.comment %}<p style="margin-top:8px;">{{ r.comment }}</p>{% endif %}
+        {% if r.farmer_response %}
+        <div class="review-response">
+            <strong><i class="fas fa-reply"></i> Your Response:</strong>
+            <p style="margin-top:4px;">{{ r.farmer_response }}</p>
+        </div>
+        {% else %}
+        <form method="POST" action="{{ url_for('farmer.respond_review', rid=r.id) }}" style="margin-top:12px;">
+            <div class="form-group" style="margin-bottom:8px;">
+                <textarea name="response" class="form-control" rows="2" placeholder="Write a response..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-reply"></i> Respond</button>
+        </form>
+        {% endif %}
+    </div>
+    {% endfor %}
+    {% else %}
+    <div class="empty-state"><div class="icon"><i class="fas fa-star"></i></div><h3>No reviews yet</h3></div>
+    {% endif %}
+</div>
+<div style="height:40px;"></div>
+{% endblock %}

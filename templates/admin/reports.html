@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}Reports - FarmFresh Admin{% endblock %}
+{% block content %}
+<div class="page-header" style="background:linear-gradient(135deg,#1a1a2e,#16213e);">
+    <div class="container"><h1><i class="fas fa-chart-bar"></i> Sales & Activity Reports</h1></div>
+</div>
+<div class="container">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+        <div class="card" style="padding:24px;">
+            <h3 style="margin-bottom:16px;"><i class="fas fa-calendar-alt" style="color:var(--primary);"></i> Monthly Revenue</h3>
+            {% if monthly %}
+            <table style="box-shadow:none;">
+                <thead><tr><th>Month</th><th>Revenue</th><th>Orders</th></tr></thead>
+                <tbody>
+                    {% for m in monthly %}
+                    <tr><td>{{ m.month }}</td><td><strong>${{ "%.2f"|format(m.revenue) }}</strong></td><td>{{ m.order_count }}</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}<p style="color:var(--text-light);">No data yet</p>{% endif %}
+        </div>
+        <div class="card" style="padding:24px;">
+            <h3 style="margin-bottom:16px;"><i class="fas fa-trophy" style="color:var(--accent);"></i> Top Farmers</h3>
+            {% if top_farmers %}
+            <table style="box-shadow:none;">
+                <thead><tr><th>Farm</th><th>Revenue</th><th>Orders</th></tr></thead>
+                <tbody>
+                    {% for f in top_farmers %}
+                    <tr><td>{{ f.farm_name }}</td><td><strong>${{ "%.2f"|format(f.revenue) }}</strong></td><td>{{ f.orders }}</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}<p style="color:var(--text-light);">No data yet</p>{% endif %}
+        </div>
+    </div>
+    <div class="card mt-3" style="padding:24px;">
+        <h3 style="margin-bottom:16px;"><i class="fas fa-fire" style="color:var(--danger);"></i> Top Products</h3>
+        {% if top_products %}
+        <div class="table-responsive">
+            <table style="box-shadow:none;">
+                <thead><tr><th>Product</th><th>Farm</th><th>Units Sold</th><th>Revenue</th></tr></thead>
+                <tbody>
+                    {% for p in top_products %}
+                    <tr><td>{{ p.name }}</td><td>{{ p.farm_name }}</td><td>{{ p.sold }}</td><td><strong>${{ "%.2f"|format(p.revenue) }}</strong></td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}<p style="color:var(--text-light);">No data yet</p>{% endif %}
+    </div>
+</div>
+<div style="height:40px;"></div>
+{% endblock %}

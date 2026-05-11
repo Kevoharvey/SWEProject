@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}Notifications - FarmFresh{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div class="container"><h1><i class="fas fa-bell"></i> Notifications</h1></div>
+</div>
+<div class="container" style="max-width:700px;">
+    {% if notifications %}
+    {% for n in notifications %}
+    <div class="notif-item {% if not n.is_read %}unread{% endif %}">
+        <div class="notif-dot" style="{% if n.is_read %}opacity:0;{% endif %}"></div>
+        <div style="flex:1;">
+            <strong>{{ n.title }}</strong>
+            <p style="font-size:0.9rem;color:var(--text-light);margin-top:2px;">{{ n.message }}</p>
+            <span style="font-size:0.8rem;color:var(--text-light);">{{ n.created_at.strftime('%b %d, %Y %I:%M %p') }}</span>
+        </div>
+        {% if n.link %}<a href="{{ n.link }}" class="btn btn-sm btn-outline">View</a>{% endif %}
+    </div>
+    {% endfor %}
+    {% else %}
+    <div class="empty-state"><div class="icon"><i class="fas fa-bell"></i></div><h3>No notifications</h3></div>
+    {% endif %}
+</div>
+<div style="height:40px;"></div>
+{% endblock %}
