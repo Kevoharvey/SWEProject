@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block title %}Market Map - FarmFresh{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1><i class="fas fa-map-marked-alt"></i> Find Markets Near You</h1>
+        <p>Discover farmers' markets and see what's available</p>
+    </div>
+</div>
+<div class="container">
+    <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:center;">
+        <span style="font-weight:600;">Filter by day:</span>
+        <a href="{{ url_for('main.market_map') }}" class="btn btn-sm {% if not selected_day %}btn-primary{% else %}btn-outline{% endif %}">All</a>
+        {% for d in days %}
+        <a href="{{ url_for('main.market_map', day=d) }}" class="btn btn-sm {% if selected_day == d %}btn-primary{% else %}btn-outline{% endif %}">{{ d }}</a>
+        {% endfor %}
+    </div>
+    <div id="market-map"></div>
+    {% if markets %}
+    <div style="margin-top:24px;">
+        <h3 style="margin-bottom:16px;">Markets ({{ markets|length }})</h3>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;">
+            {% for m in markets %}
+            <div class="card" style="padding:16px;">
+                <strong>{{ m.market_name }}</strong>
+                <p style="font-size:0.9rem;color:var(--text-light);">{{ m.day_of_week }} · {{ m.start_time }} - {{ m.end_time }}</p>
+                <p style="font-size:0.85rem;"><i class="fas fa-tractor"></i> <a href="{{ url_for('main.farmer_profile', farmer_id=m.farmer_id) }}">{{ m.farm_name }}</a></p>
+                {% if m.categories %}<p style="font-size:0.8rem;color:var(--text-light);margin-top:4px;"><i class="fas fa-tags"></i> {{ m.categories }}</p>{% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+<div style="height:40px;"></div>
+{% endblock %}
+{% block scripts %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const map = L.map('market-map').setView([40.7128, -74.0060], 10);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+}).addTo(map);
+
+fetch('/api/markets').then(r => r.json()).then(markets => {
+    if (markets.length === 0) return;
+    const bounds = [];
+    markets.forEach(m => {
+        if (!m.lat || !m.lng) return;
+        bounds.push([m.lat, m.lng]);
+        const marker = L.marker([m.lat, m.lng]).addTo(map);
+        marker.bindPopup(`
+            <strong>${m.market_name}</strong><br>
+            <em>${m.farm_name}</em><br>
+            ${m.day_of_week} · ${m.start_time} - ${m.end_time}<br>
+            ${m.categories ? '<small>Categories: ' + m.categories + '</small><br>' : ''}
+            <a href="/farmer/${m.farmer_id}">View Farm →</a>
+        `);
+    });
+    if (bounds.length > 0) map.fitBounds(bounds, { padding: [40, 40] });
+});
+
+if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(pos => {
+        const { latitude, longitude } = pos.coords;
+        L.circleMarker([latitude, longitude], { radius: 10, color: '#e63946', fillColor: '#e63946', fillOpacity: 0.8 })
+            .addTo(map).bindPopup('You are here');
+        map.setView([latitude, longitude], 12);
+    });
+}
+</script>
+{% endblock %}

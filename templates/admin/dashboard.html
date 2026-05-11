@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard - FarmFresh{% endblock %}
+{% block content %}
+<div class="page-header" style="background:linear-gradient(135deg,#1a1a2e,#16213e);">
+    <div class="container"><h1><i class="fas fa-shield-alt"></i> Admin Dashboard</h1></div>
+</div>
+<div class="container">
+    <div class="dashboard-grid">
+        <div class="dash-card"><div class="dash-icon">👨‍🌾</div><div class="dash-value">{{ farmer_count }}</div><div class="dash-label">Active Farmers</div></div>
+        <div class="dash-card"><div class="dash-icon">⏳</div><div class="dash-value">{{ pending_count }}</div><div class="dash-label">Pending Approvals</div></div>
+        <div class="dash-card"><div class="dash-icon">📦</div><div class="dash-value">{{ product_count }}</div><div class="dash-label">Active Products</div></div>
+        <div class="dash-card"><div class="dash-icon">💰</div><div class="dash-value">${{ "%.2f"|format(total_revenue) }}</div><div class="dash-label">Total Revenue</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+        <div class="card" style="padding:24px;">
+            <h3 style="margin-bottom:16px;">Quick Actions</h3>
+            <a href="{{ url_for('admin.farmers', status='pending') }}" class="btn btn-warning btn-block mb-1"><i class="fas fa-user-clock"></i> Pending Farmers ({{ pending_count }})</a>
+            <a href="{{ url_for('admin.farmers') }}" class="btn btn-outline btn-block mb-1"><i class="fas fa-users"></i> All Farmers</a>
+            <a href="{{ url_for('admin.products') }}" class="btn btn-outline btn-block mb-1"><i class="fas fa-boxes"></i> All Products</a>
+            <a href="{{ url_for('admin.reports') }}" class="btn btn-outline btn-block"><i class="fas fa-chart-bar"></i> Reports</a>
+        </div>
+        <div class="card" style="padding:24px;">
+            <h3 style="margin-bottom:16px;">Sales by Category</h3>
+            {% if category_sales %}
+            {% for cs in category_sales %}
+            <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+                <span>{{ cs.category }}</span>
+                <strong>${{ "%.2f"|format(cs.total) }}</strong>
+            </div>
+            {% endfor %}
+            {% else %}<p style="color:var(--text-light);">No sales data yet</p>{% endif %}
+        </div>
+    </div>
+    {% if recent_orders %}
+    <h3 class="mt-4 mb-2">Recent Orders</h3>
+    <div class="table-responsive">
+        <table>
+            <thead><tr><th>#</th><th>Buyer</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead>
+            <tbody>
+                {% for o in recent_orders %}
+                <tr>
+                    <td>{{ o.id }}</td><td>{{ o.buyer_name }}</td>
+                    <td>${{ "%.2f"|format(o.total_amount) }}</td>
+                    <td><span class="stock-badge stock-{{ 'in' if o.status in ('confirmed','ready','picked-up') else 'low' if o.status == 'pending' else 'out' }}">{{ o.status }}</span></td>
+                    <td>{{ o.created_at.strftime('%b %d') }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+</div>
+<div style="height:40px;"></div>
+{% endblock %}

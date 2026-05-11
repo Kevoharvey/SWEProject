@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Manage Farmers - FarmFresh Admin{% endblock %}
+{% block content %}
+<div class="page-header" style="background:linear-gradient(135deg,#1a1a2e,#16213e);">
+    <div class="container"><h1><i class="fas fa-users"></i> Manage Farmers</h1></div>
+</div>
+<div class="container">
+    <div style="display:flex;gap:8px;margin-bottom:20px;">
+        <a href="{{ url_for('admin.farmers') }}" class="btn btn-sm {% if not status_filter %}btn-primary{% else %}btn-outline{% endif %}">All</a>
+        <a href="{{ url_for('admin.farmers', status='pending') }}" class="btn btn-sm {% if status_filter == 'pending' %}btn-warning{% else %}btn-outline{% endif %}">Pending</a>
+        <a href="{{ url_for('admin.farmers', status='approved') }}" class="btn btn-sm {% if status_filter == 'approved' %}btn-success{% else %}btn-outline{% endif %}">Approved</a>
+        <a href="{{ url_for('admin.farmers', status='rejected') }}" class="btn btn-sm {% if status_filter == 'rejected' %}btn-danger{% else %}btn-outline{% endif %}">Rejected</a>
+    </div>
+    {% if farmers %}
+    <div class="table-responsive">
+        <table>
+            <thead><tr><th>Farm</th><th>Owner</th><th>Email</th><th>Phone</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+                {% for f in farmers %}
+                <tr>
+                    <td><strong>{{ f.farm_name }}</strong></td>
+                    <td>{{ f.full_name }}</td>
+                    <td>{{ f.email }}</td>
+                    <td>{{ f.phone or '-' }}</td>
+                    <td><span class="stock-badge stock-{{ 'in' if f.status == 'approved' else 'low' if f.status == 'pending' else 'out' }}">{{ f.status }}</span></td>
+                    <td>
+                        {% if f.status == 'pending' %}
+                        <a href="{{ url_for('admin.approve_farmer', fid=f.id) }}" class="btn btn-sm btn-success"><i class="fas fa-check"></i></a>
+                        <a href="{{ url_for('admin.reject_farmer', fid=f.id) }}" class="btn btn-sm btn-danger"><i class="fas fa-times"></i></a>
+                        {% elif f.status == 'rejected' %}
+                        <a href="{{ url_for('admin.approve_farmer', fid=f.id) }}" class="btn btn-sm btn-success"><i class="fas fa-check"></i> Approve</a>
+                        {% elif f.status == 'approved' %}
+                        <a href="{{ url_for('admin.reject_farmer', fid=f.id) }}" class="btn btn-sm btn-danger"><i class="fas fa-ban"></i> Suspend</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-state"><div class="icon"><i class="fas fa-users"></i></div><h3>No farmers found</h3></div>
+    {% endif %}
+</div>
+<div style="height:40px;"></div>
+{% endblock %}

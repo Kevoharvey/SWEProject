@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% block title %}Marketplace - FarmFresh{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1><i class="fas fa-store"></i> Marketplace</h1>
+        <p>Browse fresh products from local farmers</p>
+    </div>
+</div>
+<div class="container">
+    <div class="marketplace-layout">
+        <aside class="filter-sidebar">
+            <h3><i class="fas fa-filter"></i> Filters</h3>
+            <form method="GET" action="{{ url_for('main.marketplace') }}">
+                <div class="form-group">
+                    <label>Search</label>
+                    <input type="text" name="search" class="form-control" placeholder="Search products..." value="{{ filters.search }}">
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select name="category" class="form-control">
+                        <option value="">All Categories</option>
+                        {% for c in categories %}
+                        <option value="{{ c }}" {% if filters.category == c %}selected{% endif %}>{{ c }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Market Day</label>
+                    <select name="market_day" class="form-control">
+                        <option value="">Any Day</option>
+                        {% for d in days %}
+                        <option value="{{ d }}" {% if filters.market_day == d %}selected{% endif %}>{{ d }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Min Price</label>
+                        <input type="number" name="price_min" class="form-control" step="0.01" value="{{ filters.price_min }}">
+                    </div>
+                    <div class="form-group">
+                        <label>Max Price</label>
+                        <input type="number" name="price_max" class="form-control" step="0.01" value="{{ filters.price_max }}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Farm Name</label>
+                    <input type="text" name="farm" class="form-control" placeholder="Search by farm..." value="{{ filters.farm }}">
+                </div>
+                <div class="form-group">
+                    <label>Sort By</label>
+                    <select name="sort" class="form-control">
+                        <option value="newest" {% if filters.sort == 'newest' %}selected{% endif %}>Newest</option>
+                        <option value="price_low" {% if filters.sort == 'price_low' %}selected{% endif %}>Price: Low to High</option>
+                        <option value="price_high" {% if filters.sort == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-search"></i> Apply Filters</button>
+                <a href="{{ url_for('main.marketplace') }}" class="btn btn-outline btn-block mt-1" style="font-size:0.85rem;">Clear All</a>
+            </form>
+        </aside>
+        <div>
+            <p style="margin-bottom:16px;color:var(--text-light);">{{ products|length }} product{{ 's' if products|length != 1 }} found</p>
+            {% if products %}
+            <div class="product-grid">
+                {% for p in products %}
+                <a href="{{ url_for('main.product_detail', product_id=p.id) }}" class="card product-card" style="color:inherit;">
+                    <div class="card-img">
+                        {% if p.photo %}
+                        <img src="{{ url_for('static', filename=p.photo) }}" alt="{{ p.name }}">
+                        {% else %}
+                        <i class="fas fa-seedling" style="font-size:3rem;"></i>
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                            <span class="category-badge">{{ p.category }}</span>
+                            <span class="stock-badge stock-{{ 'in' if p.stock_status == 'in-stock' else 'low' if p.stock_status == 'low-stock' else 'out' }}">{{ p.stock_status }}</span>
+                        </div>
+                        <h3 class="card-title">{{ p.name }}</h3>
+                        <div class="price">${{ "%.2f"|format(p.price) }} <span class="unit">/ {{ p.unit }}</span></div>
+                        <div class="farm-name"><i class="fas fa-tractor"></i> {{ p.farm_name }}</div>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <div class="icon"><i class="fas fa-search"></i></div>
+                <h3>No products found</h3>
+                <p>Try adjusting your filters</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<div style="height:40px;"></div>
+{% endblock %}
