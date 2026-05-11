@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard - FarmFresh{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div class="container"><h1><i class="fas fa-user"></i> Welcome, {{ session.user_name }}</h1></div>
+</div>
+<div class="container">
+    <div class="dashboard-grid">
+        <div class="dash-card"><div class="dash-icon">🛒</div><div class="dash-value">{{ order_count }}</div><div class="dash-label">Total Orders</div></div>
+        <div class="dash-card"><div class="dash-icon">🔔</div><div class="dash-value">{{ unread }}</div><div class="dash-label">Unread Notifications</div></div>
+        <div class="dash-card"><div class="dash-icon">❤️</div><div class="dash-value">{{ sub_count }}</div><div class="dash-label">Subscriptions</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+        <div class="card" style="padding:24px;">
+            <h3 style="margin-bottom:16px;"><i class="fas fa-bolt" style="color:var(--warning);"></i> Quick Actions</h3>
+            <a href="{{ url_for('main.marketplace') }}" class="btn btn-primary btn-block mb-1"><i class="fas fa-store"></i> Browse Marketplace</a>
+            <a href="{{ url_for('buyer.orders') }}" class="btn btn-outline btn-block mb-1"><i class="fas fa-clipboard-list"></i> My Orders</a>
+            <a href="{{ url_for('buyer.subscriptions') }}" class="btn btn-outline btn-block mb-1"><i class="fas fa-heart"></i> Subscriptions</a>
+        </div>
+        <div class="card" style="padding:24px;">
+            <h3 style="margin-bottom:16px;"><i class="fas fa-bell" style="color:var(--info);"></i> Recent Notifications</h3>
+            {% if notifications %}
+            {% for n in notifications[:5] %}
+            <div class="notif-item {% if not n.is_read %}unread{% endif %}" style="padding:10px 12px;margin-bottom:6px;">
+                <div>
+                    <strong style="font-size:0.9rem;">{{ n.title }}</strong>
+                    <p style="font-size:0.8rem;color:var(--text-light);margin-top:2px;">{{ n.message }}</p>
+                </div>
+            </div>
+            {% endfor %}
+            <a href="{{ url_for('buyer.notifications') }}" class="btn btn-sm btn-outline mt-1">View All</a>
+            {% else %}
+            <p style="color:var(--text-light);">No notifications yet</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<div style="height:40px;"></div>
+{% endblock %}

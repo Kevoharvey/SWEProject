@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block title %}{{ farmer.farm_name }} - FarmFresh{% endblock %}
+{% block content %}
+<div class="farmer-header">
+    <div class="container text-center">
+        {% if farmer.profile_image %}
+        <img src="{{ url_for('static', filename=farmer.profile_image) }}" alt="{{ farmer.farm_name }}" class="profile-img">
+        {% else %}
+        <div class="profile-img" style="display:inline-flex;align-items:center;justify-content:center;background:var(--accent);font-size:2.5rem;"><i class="fas fa-tractor"></i></div>
+        {% endif %}
+        <h1>{{ farmer.farm_name }}</h1>
+        <p style="opacity:0.85;"><i class="fas fa-map-marker-alt"></i> {{ farmer.address or 'Local Farm' }}</p>
+        {% if stats.avg_rating %}
+        <div style="margin-top:8px;">
+            <span class="review-stars">{% for i in range(5) %}{% if i < (stats.avg_rating|round|int) %}★{% else %}☆{% endif %}{% endfor %}</span>
+            <span style="opacity:0.8;">({{ stats.review_count }} reviews)</span>
+        </div>
+        {% endif %}
+        {% if session.get('role') == 'buyer' %}
+        <a href="{{ url_for('buyer.subscribe', farmer_id=farmer.id) }}" class="btn mt-2 {% if is_subscribed %}btn-outline{% else %}btn-accent{% endif %}">
+            <i class="fas fa-bell"></i> {{ 'Subscribed' if is_subscribed else 'Subscribe' }}
+        </a>
+        {% endif %}
+    </div>
+</div>
+<div class="container section">
+    {% if farmer.description %}
+    <div class="card" style="padding:24px;margin-bottom:32px;">
+        <h3 style="margin-bottom:8px;">About</h3>
+        <p style="color:var(--text-light);">{{ farmer.description }}</p>
+        {% if farmer.phone %}<p class="mt-1"><i class="fas fa-phone"></i> {{ farmer.phone }}</p>{% endif %}
+    </div>
+    {% endif %}
+    {% if schedules %}
+    <h3 style="margin-bottom:16px;"><i class="fas fa-calendar-alt"></i> Market Schedule</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:32px;">
+        {% for s in schedules %}
+        <div class="card" style="padding:16px;">
+            <strong>{{ s.market_name }}</strong>
+            <p style="font-size:0.9rem;color:var(--text-light);">{{ s.day_of_week }} · {{ s.start_time.strftime('%I:%M %p') if s.start_time is string == false else s.start_time }} - {{ s.end_time.strftime('%I:%M %p') if s.end_time is string == false else s.end_time }}</p>
+            {% if s.market_address %}<p style="font-size:0.85rem;color:var(--text-light);"><i class="fas fa-map-pin"></i> {{ s.market_address }}</p>{% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <h3 style="margin-bottom:16px;"><i class="fas fa-seedling"></i> Products ({{ products|length }})</h3>
+    {% if products %}
+    <div class="product-grid">
+        {% for p in products %}
+        <a href="{{ url_for('main.product_detail', product_id=p.id) }}" class="card product-card" style="color:inherit;">
+            <div class="card-img">
+                {% if p.photo %}<img src="{{ url_for('static', filename=p.photo) }}" alt="{{ p.name }}">{% else %}<i class="fas fa-seedling" style="font-size:3rem;"></i>{% endif %}
+            </div>
+            <div class="card-body">
+                <span class="category-badge">{{ p.category }}</span>
+                <h3 class="card-title" style="margin-top:6px;">{{ p.name }}</h3>
+                <div class="price">${{ "%.2f"|format(p.price) }} <span class="unit">/ {{ p.unit }}</span></div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state"><div class="icon"><i class="fas fa-seedling"></i></div><h3>No products yet</h3></div>
+    {% endif %}
+    {% if reviews %}
+    <h3 style="margin:32px 0 16px;"><i class="fas fa-star"></i> Reviews</h3>
+    {% for r in reviews %}
+    <div class="review-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <strong>{{ r.buyer_name }}</strong>
+            <span style="font-size:0.85rem;color:var(--text-light);">{{ r.created_at.strftime('%b %d, %Y') }}</span>
+        </div>
+        <div class="review-stars">{% for i in range(5) %}{% if i < r.rating %}★{% else %}☆{% endif %}{% endfor %}</div>
+        {% if r.comment %}<p style="margin-top:8px;">{{ r.comment }}</p>{% endif %}
+        {% if r.farmer_response %}
+        <div class="review-response">
+            <strong><i class="fas fa-reply"></i> Farmer Response:</strong>
+            <p style="margin-top:4px;">{{ r.farmer_response }}</p>
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+    {% endif %}
+</div>
+{% endblock %}
