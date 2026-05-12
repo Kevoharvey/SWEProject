@@ -265,8 +265,9 @@ def update_order_status(oid):
     cur.execute("SELECT buyer_id FROM orders WHERE id = %s", (oid,))
     order = cur.fetchone()
     if order:
+        title = 'Order Confirmed!' if status == 'confirmed' else 'Order Update'
         cur.execute("INSERT INTO notifications (user_id, title, message, link) VALUES (%s, %s, %s, %s)",
-                   (order['buyer_id'], 'Order Update', f'Your order #{oid} is now {status}', f'/buyer/orders'))
+                   (order['buyer_id'], title, f'Your order #{oid} is now {status}', f'/buyer/orders'))
     mysql.connection.commit()
     cur.close()
     flash(f'Order updated to {status}.', 'success')

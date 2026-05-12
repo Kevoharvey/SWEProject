@@ -21,6 +21,7 @@
                     <td>
                         <form method="POST" action="{{ url_for('farmer.update_order_status', oid=o.id) }}" style="display:flex;gap:4px;">
                             <select name="status" class="form-control" style="width:auto;padding:4px 8px;font-size:0.8rem;">
+                                <option value="pending" {% if o.status == 'pending' %}selected{% endif %}>Pending</option>
                                 <option value="confirmed" {% if o.status == 'confirmed' %}selected{% endif %}>Confirmed</option>
                                 <option value="ready" {% if o.status == 'ready' %}selected{% endif %}>Ready</option>
                                 <option value="picked-up" {% if o.status == 'picked-up' %}selected{% endif %}>Picked Up</option>

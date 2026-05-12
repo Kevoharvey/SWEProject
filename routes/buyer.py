@@ -135,7 +135,7 @@ def checkout():
     total = sum(float(item['price']) * item['quantity'] for item in items)
 
     cur.execute("""INSERT INTO orders (buyer_id, market_location, pickup_date, pickup_time_slot, total_amount, notes, status)
-                  VALUES (%s, %s, %s, %s, %s, %s, 'confirmed')""",
+                  VALUES (%s, %s, %s, %s, %s, %s, 'pending')""",
                (session['user_id'], market_location, pickup_date, pickup_time, total, notes))
     order_id = cur.lastrowid
 
@@ -157,16 +157,16 @@ def checkout():
 
         # Notify farmer
         cur.execute("""INSERT INTO notifications (user_id, title, message, link)
-                      SELECT user_id, 'New Paid Order!', %s, '/farmer/orders'
+                      SELECT user_id, 'New Order Created', %s, '/farmer/orders'
                       FROM farmers WHERE id = %s""",
-                   (f'New paid order #{order_id} received', item['farmer_id']))
+                   (f'New order #{order_id} received', item['farmer_id']))
 
     # Clear cart
     cur.execute("DELETE FROM cart_items WHERE buyer_id = %s", (session['user_id'],))
     mysql.connection.commit()
     cur.close()
 
-    flash('Payment successful! Order placed and confirmed.', 'success')
+    flash('Order placed successfully. Waiting for farmer confirmation.', 'success')
     return redirect(url_for('buyer.orders'))
 
 @buyer_bp.route('/orders')
