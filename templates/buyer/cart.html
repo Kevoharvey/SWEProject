@@ -14,7 +14,7 @@
                     <i class="fas fa-tractor"></i> {{ farm_name }}
                     <span style="float:right;font-weight:400;opacity:0.8;">Subtotal: ${{ "%.2f"|format(group.subtotal) }}</span>
                 </div>
-                {% for item in group.items %}
+                {% for item in group['items'] %}
                 <div class="cart-item">
                     {% if item.photo %}<img src="{{ url_for('static', filename=item.photo) }}" alt="{{ item.name }}">
                     {% else %}<div style="width:70px;height:70px;border-radius:8px;background:#e9ecef;display:flex;align-items:center;justify-content:center;"><i class="fas fa-seedling"></i></div>{% endif %}
@@ -80,7 +80,27 @@
                         <label>Notes (optional)</label>
                         <textarea name="notes" class="form-control" rows="2" placeholder="Special instructions..."></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-block btn-lg"><i class="fas fa-check-circle"></i> Place Pre-Order</button>
+                    <hr style="margin:16px 0;border-color:var(--border);">
+                    <h4 style="margin-bottom:12px;"><i class="fas fa-credit-card"></i> Payment Details</h4>
+                    <div class="form-group">
+                        <label>Name on Card *</label>
+                        <input type="text" class="form-control" placeholder="John Doe" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Card Number *</label>
+                        <input type="text" class="form-control" placeholder="0000 0000 0000 0000" maxlength="19" required>
+                    </div>
+                    <div style="display:flex;gap:12px;">
+                        <div class="form-group" style="flex:1;">
+                            <label>Expiry *</label>
+                            <input type="text" class="form-control" placeholder="MM/YY" maxlength="5" required>
+                        </div>
+                        <div class="form-group" style="flex:1;">
+                            <label>CVV *</label>
+                            <input type="text" class="form-control" placeholder="123" maxlength="4" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block btn-lg mt-3"><i class="fas fa-lock"></i> Pay ${{ "%.2f"|format(total) }} & Place Order</button>
                 </form>
             </div>
         </div>

@@ -29,11 +29,17 @@
             <div class="form-group">
                 <label>I am a...</label>
                 <div style="display:flex;gap:12px;">
-                    <label style="flex:1;display:flex;align-items:center;gap:8px;padding:12px 16px;border:2px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:var(--transition);" id="role-buyer-label">
-                        <input type="radio" name="role" value="buyer" checked onchange="toggleFarmerFields()"> <i class="fas fa-shopping-bag"></i> Buyer
+                    <label
+                        style="flex:1;display:flex;align-items:center;gap:8px;padding:12px 16px;border:2px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:var(--transition);"
+                        id="role-buyer-label">
+                        <input type="radio" name="role" value="buyer" checked onchange="toggleFarmerFields()"> <i
+                            class="fas fa-shopping-bag"></i> Buyer
                     </label>
-                    <label style="flex:1;display:flex;align-items:center;gap:8px;padding:12px 16px;border:2px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:var(--transition);" id="role-farmer-label">
-                        <input type="radio" name="role" value="farmer" onchange="toggleFarmerFields()"> <i class="fas fa-tractor"></i> Farmer
+                    <label
+                        style="flex:1;display:flex;align-items:center;gap:8px;padding:12px 16px;border:2px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:var(--transition);"
+                        id="role-farmer-label">
+                        <input type="radio" name="role" value="farmer" onchange="toggleFarmerFields()"> <i
+                            class="fas fa-tractor"></i> Farmer
                     </label>
                 </div>
             </div>
@@ -57,7 +63,8 @@
                     <textarea id="description" name="description" class="form-control" rows="3"></textarea>
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary btn-block btn-lg mt-2"><i class="fas fa-user-plus"></i> Create Account</button>
+            <button type="submit" class="btn btn-primary btn-block btn-lg mt-2"><i class="fas fa-user-plus"></i> Create
+                Account</button>
         </form>
         <p class="text-center mt-3" style="color:var(--text-light);">
             Already have an account? <a href="{{ url_for('auth.login') }}">Sign in</a>
@@ -67,9 +74,9 @@
 {% endblock %}
 {% block scripts %}
 <script>
-function toggleFarmerFields() {
-    const isFarmer = document.querySelector('input[name="role"][value="farmer"]').checked;
-    document.getElementById('farmer-fields').style.display = isFarmer ? 'block' : 'none';
-}
+    function toggleFarmerFields() {
+        const isFarmer = document.querySelector('input[name="role"][value="farmer"]').checked;
+        document.getElementById('farmer-fields').style.display = isFarmer ? 'block' : 'none';
+    }
 </script>
 {% endblock %}

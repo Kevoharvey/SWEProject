@@ -90,6 +90,29 @@ def login():
 
     return render_template('auth/login.html')
 
+@auth_bp.route('/forgot_password', methods=['GET', 'POST'])
+def forgot_password():
+    if request.method == 'POST':
+        email = request.form['email']
+        new_password = request.form['new_password']
+        
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT id FROM users WHERE email = %s", (email,))
+        user = cur.fetchone()
+        
+        if user:
+            pw_hash = generate_password_hash(new_password)
+            cur.execute("UPDATE users SET password_hash = %s WHERE id = %s", (pw_hash, user['id']))
+            mysql.connection.commit()
+            flash('Your password has been successfully reset! You can now log in.', 'success')
+            cur.close()
+            return redirect(url_for('auth.login'))
+        else:
+            flash('No account found with that email address.', 'danger')
+            cur.close()
+            
+    return render_template('auth/forgot_password.html')
+
 @auth_bp.route('/logout')
 def logout():
     session.clear()

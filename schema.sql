@@ -190,5 +190,5 @@ CREATE TABLE IF NOT EXISTS notifications (
 -- password: admin123 (hashed with werkzeug)
 -- ============================================
 INSERT INTO users (email, password_hash, full_name, role)
-VALUES ('admin@farmmarket.com', 'scrypt:32768:8:1$placeholder$placeholder', 'System Admin', 'admin')
-ON DUPLICATE KEY UPDATE email = email;
+VALUES ('admin@farmmarket.com', 'scrypt:32768:8:1$BMZV0MrIfrHUkNBd$b16e97602bd6373789cca6964837161fefa9ba9599025224620c208b3e789242e9dc0fc96b418846d395252716099328563ded2022be90af35e554aa94d323b0', 'System Admin', 'admin')
+ON DUPLICATE KEY UPDATE password_hash = VALUES(password_hash);
