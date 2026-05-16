@@ -61,7 +61,7 @@
             </form>
         </aside>
         <div>
-            <p style="margin-bottom:16px;color:var(--text-light);">{{ products|length }} product{{ 's' if products|length != 1 }} found</p>
+            <p class="result-count">{{ products|length }} product{{ 's' if products|length != 1 }} found</p>
             {% if products %}
             <div class="product-grid">
                 {% for p in products %}

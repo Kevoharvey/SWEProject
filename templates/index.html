@@ -5,12 +5,14 @@
     <div class="container">
         <h1>Fresh From Farm<br>To Your Table</h1>
         <p>Discover local farmers, browse fresh produce, and pre-order for hassle-free market day pickups.</p>
-        <a href="{{ url_for('main.marketplace') }}" class="btn btn-accent btn-lg" style="margin-right:12px;">
-            <i class="fas fa-store"></i> Browse Marketplace
-        </a>
-        <a href="{{ url_for('auth.register') }}" class="btn btn-lg" style="background:rgba(255,255,255,0.15);color:#fff;border:2px solid rgba(255,255,255,0.3);">
-            <i class="fas fa-tractor"></i> Join as Farmer
-        </a>
+        <div class="hero-actions">
+            <a href="{{ url_for('main.marketplace') }}" class="btn btn-accent btn-lg">
+                <i class="fas fa-store"></i> Browse Marketplace
+            </a>
+            <a href="{{ url_for('auth.register') }}" class="btn btn-hero-secondary btn-lg">
+                <i class="fas fa-tractor"></i> Join as Farmer
+            </a>
+        </div>
     </div>
 </section>
 
@@ -18,15 +20,15 @@
     <div class="stats-bar">
         <div class="stat-card">
             <div class="stat-number">{{ farmer_count }}</div>
-            <div class="stat-label">Local Farmers</div>
+            <div class="stat-label">Local Farmer(s)</div>
         </div>
         <div class="stat-card">
             <div class="stat-number">{{ product_count }}</div>
-            <div class="stat-label">Fresh Products</div>
+            <div class="stat-label">Fresh Product(s)</div>
         </div>
         <div class="stat-card">
-            <div class="stat-number">7</div>
-            <div class="stat-label">Market Days</div>
+            <div class="stat-number">{{ market_count }}</div>
+            <div class="stat-label">Market Day(s)</div>
         </div>
     </div>
 </div>
@@ -56,7 +58,7 @@
 </section>
 
 {% if featured %}
-<section class="section" style="background:#fff;">
+<section class="section section-band">
     <div class="container">
         <h2 class="section-title">Fresh Picks</h2>
         <p class="section-subtitle">Just harvested and ready for you</p>

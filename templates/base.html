@@ -14,10 +14,10 @@
 <body>
     <nav class="navbar">
         <div class="container">
-            <a href="{{ url_for('main.index') }}" class="navbar-brand">
+            <a href="{{ url_for('main.index') }}" class="navbar-brand" aria-label="FarmFresh home">
                 <i class="fas fa-leaf"></i> Farm<span>Fresh</span>
             </a>
-            <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('active')">
+            <button class="hamburger" type="button" aria-label="Toggle navigation" onclick="document.querySelector('.nav-links').classList.toggle('active')">
                 <i class="fas fa-bars"></i>
             </button>
             <ul class="nav-links">
@@ -36,7 +36,7 @@
                     {% endif %}
                     <li><a href="{{ url_for('auth.logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                 {% else %}
-                    <li><a href="{{ url_for('auth.login') }}" class="btn btn-outline" style="border-color:var(--accent-light);color:var(--accent-light);">Login</a></li>
+                    <li><a href="{{ url_for('auth.login') }}" class="btn btn-outline">Login</a></li>
                     <li><a href="{{ url_for('auth.register') }}" class="btn btn-accent">Sign Up</a></li>
                 {% endif %}
             </ul>

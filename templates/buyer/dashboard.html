@@ -6,19 +6,19 @@
 </div>
 <div class="container">
     <div class="dashboard-grid">
-        <div class="dash-card"><div class="dash-icon">🛒</div><div class="dash-value">{{ order_count }}</div><div class="dash-label">Total Orders</div></div>
-        <div class="dash-card"><div class="dash-icon">🔔</div><div class="dash-value">{{ unread }}</div><div class="dash-label">Unread Notifications</div></div>
-        <div class="dash-card"><div class="dash-icon">❤️</div><div class="dash-value">{{ sub_count }}</div><div class="dash-label">Subscriptions</div></div>
+        <div class="dash-card"><div class="dash-icon"><i class="fas fa-shopping-bag"></i></div><div class="dash-value">{{ order_count }}</div><div class="dash-label">Total Orders</div></div>
+        <div class="dash-card"><div class="dash-icon"><i class="fas fa-bell"></i></div><div class="dash-value">{{ unread }}</div><div class="dash-label">Unread Notifications</div></div>
+        <div class="dash-card"><div class="dash-icon"><i class="fas fa-heart"></i></div><div class="dash-value">{{ sub_count }}</div><div class="dash-label">Subscriptions</div></div>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+    <div class="dashboard-panels">
         <div class="card" style="padding:24px;">
-            <h3 style="margin-bottom:16px;"><i class="fas fa-bolt" style="color:var(--warning);"></i> Quick Actions</h3>
+            <h3 class="panel-title"><i class="fas fa-bolt" style="color:var(--warning);"></i> Quick Actions</h3>
             <a href="{{ url_for('main.marketplace') }}" class="btn btn-primary btn-block mb-1"><i class="fas fa-store"></i> Browse Marketplace</a>
             <a href="{{ url_for('buyer.orders') }}" class="btn btn-outline btn-block mb-1"><i class="fas fa-clipboard-list"></i> My Orders</a>
             <a href="{{ url_for('buyer.subscriptions') }}" class="btn btn-outline btn-block mb-1"><i class="fas fa-heart"></i> Subscriptions</a>
         </div>
         <div class="card" style="padding:24px;">
-            <h3 style="margin-bottom:16px;"><i class="fas fa-bell" style="color:var(--info);"></i> Recent Notifications</h3>
+            <h3 class="panel-title"><i class="fas fa-bell" style="color:var(--info);"></i> Recent Notifications</h3>
             {% if notifications %}
             {% for n in notifications[:5] %}
             <div class="notif-item {% if not n.is_read %}unread{% endif %}" style="padding:10px 12px;margin-bottom:6px;">
