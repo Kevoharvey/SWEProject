@@ -11,7 +11,11 @@
             <tbody>
                 {% for p in products %}
                 <tr style="{% if not p.is_active %}opacity:0.5;{% endif %}">
-                    <td>{% if p.photo %}<img src="{{ url_for('static', filename=p.photo) }}" style="width:45px;height:45px;object-fit:cover;border-radius:6px;">{% endif %}</td>
+                    <td>
+                        {% if p.photo %}
+                        <img src="{{ photo_url(p.photo) }}" style="width:45px;height:45px;object-fit:cover;border-radius:6px;">
+                        {% endif %}
+                    </td>
                     <td><strong>{{ p.name }}</strong></td>
                     <td>{{ p.farm_name }}</td>
                     <td><span class="category-badge">{{ p.category }}</span></td>

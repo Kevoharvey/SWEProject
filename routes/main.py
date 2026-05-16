@@ -20,8 +20,10 @@ def index():
     farmer_count = cur.fetchone()['cnt']
     cur.execute("SELECT COUNT(*) as cnt FROM products WHERE is_active = 1")
     product_count = cur.fetchone()['cnt']
+    cur.execute("SELECT COUNT(*) as cnt FROM market_days")
+    market_count = cur.fetchone()['cnt'] if cur.rowcount > 0 else 0
     cur.close()
-    return render_template('index.html', featured=featured, farmer_count=farmer_count, product_count=product_count)
+    return render_template('index.html', featured=featured, farmer_count=farmer_count, product_count=product_count, market_count=market_count)
 
 @main_bp.route('/marketplace')
 def marketplace():

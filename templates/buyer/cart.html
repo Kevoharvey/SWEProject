@@ -16,8 +16,11 @@
                 </div>
                 {% for item in group['items'] %}
                 <div class="cart-item">
-                    {% if item.photo %}<img src="{{ url_for('static', filename=item.photo) }}" alt="{{ item.name }}">
-                    {% else %}<div style="width:70px;height:70px;border-radius:8px;background:#e9ecef;display:flex;align-items:center;justify-content:center;"><i class="fas fa-seedling"></i></div>{% endif %}
+                    {% if item.photo %}
+                    <img src="{{ photo_url(item.photo) }}" alt="{{ item.name }}">
+                    {% else %}
+                    <div style="width:70px;height:70px;border-radius:8px;background:#e9ecef;display:flex;align-items:center;justify-content:center;"><i class="fas fa-seedling"></i></div>
+                    {% endif %}
                     <div class="cart-item-info">
                         <h4>{{ item.name }}</h4>
                         <span style="font-size:0.85rem;color:var(--text-light);">${{ "%.2f"|format(item.price) }} / {{ item.unit }}</span>

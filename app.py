@@ -32,6 +32,19 @@ def create_app():
     app.register_blueprint(admin_bp, url_prefix='/admin')
     app.register_blueprint(api_bp, url_prefix='/api')
 
+    # Add context processor for photo_url helper
+    @app.context_processor
+    def inject_photo_url():
+        def photo_url(path):
+            if not path:
+                return '/static/images/placeholder.jpg'
+            if path.startswith('http'):
+                return path
+            if not path.startswith('/'):
+                path = '/' + path
+            return f'/static/{path}'
+        return dict(photo_url=photo_url)
+
     return app
 
 if __name__ == '__main__':
