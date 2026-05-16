@@ -6,8 +6,8 @@ from werkzeug.security import generate_password_hash
 import random
 
 # Source images path (from the agent's brain directory)
-src_dir = r"C:\Users\Youssef\.gemini\antigravity\brain\395e8395-e810-407f-b359-48aefd1e7332"
-project_dir = r"C:\Users\Youssef\OneDrive\Desktop\Sodtware\SWEProject"
+src_dir = r"/Users/kevinharvey/Desktop/Projects/SWE Project/SWEProject/brain/395e8395-e810-407f-b359-48aefd1e7332"
+project_dir = r"/Users/kevinharvey/Desktop/Projects/SWE Project/SWEProject"
 
 # Directories
 products_dir = os.path.join(project_dir, 'static', 'uploads', 'products')
@@ -30,7 +30,7 @@ for file in glob.glob(os.path.join(src_dir, "*.png")):
         shutil.copy2(file, dest)
         image_map[name] = f"uploads/products/{basename}"
 
-db = MySQLdb.connect(host="127.0.0.1", user="root", password="MySQL_12345", database="farmers_market")
+db = MySQLdb.connect(host="127.0.0.1", user="root", password="", database="farmers_market")
 cur = db.cursor()
 
 # 1. Add 10 Farmers
